@@ -1,83 +1,106 @@
+<!-- https://nykim.work/12?category=692676 -->
 <canvas id="draw" width="800" height="800"></canvas>
 
 <script>
+  //querySelector를 통해 캔버스를 선택
   const canvas = document.querySelector("#draw");
+  //getContext를 통해 캔버스를 실제로 사용할 수 있다.
   const ctx = canvas.getContext("2d");
 
+  //변수 초기화
   let isDrawing = false;
-  let prevX = 0;
-  let prevY = 0;
   let dir = true;
+  let hue = randomColor();
+  let prevX = Math.random() * 800;
+  let prevY = Math.random() * 800;
 
+  //각각 선의 크기, 선의 끝부분, 선이 만나는 부분을 설정해주는 부분
   ctx.lineWidth = 10;
   ctx.lineCap = "round";
   ctx.linejoin = "round;"
 
-  function randomColor(){
-    return Math.floor(Math.random() * 361);
-  }
+  //계속해서 랜덤한 선을 생성
+  setInterval(randomDraw, 10);
 
-  let hue = randomColor();
-
-  function draw(event){
-    if (!isDrawing) return;
-    ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
-    ctx.beginPath();
-    ctx.moveTo(prevX, prevY);
-    ctx.lineTo(event.offsetX, event.offsetY);
-    ctx.stroke();
-    hue > 360 ? hue = 0 : hue++;
-    dir ? ctx.lineWidth++ : ctx.lineWidth--;
-    if (ctx.lineWidth < 10 || ctx.lineWidth > 100)
-      dir = !dir;
-    prevX = event.offsetX;
-    prevY = event.offsetY;
-  }
-
+  //mouseup, mouseout일때는 유저 인터렉션이 들어가지 않도록
   canvas.addEventListener("mouseup", () => isDrawing = false);
   canvas.addEventListener("mouseout", () => isDrawing = false);
+
+  //mousedown, mousemove, click일때는 유저 인터렉션이 들어갈 수 있도록
   canvas.addEventListener("mousedown", (event) => {
     isDrawing = true;
     prevX = event.offsetX;
     prevY = event.offsetY;
   });
-  canvas.addEventListener("mousemove", draw);
+  canvas.addEventListener("mousemove", mouseDraw);
+  canvas.addEventListener("click", pointDraw);
 
-  canvas.addEventListener("click", (event) => {
+  //랜덤한 컬러를 생성하는 함수
+  function randomColor(){
+    //Math.random()은 0 ~ 1사이의 숫자를 반환하고
+    //Math.floor은 소수점 이하를 반올림한다
+    return Math.floor(Math.random() * 361);
+  }
+
+  //랜덤한 좌표를 생성하는 함수
+  function randomXY(cur){
+    let plus = Math.random() * 50;
+    let minus = Math.random() * -50;
+    let result = cur + plus + minus;
+
+    //캔버스 밖으로 선이 넘어가는 일이 없도록 분기
+    if (result > 800)
+      return result - plus;
+    else if (result < 0)
+      return result - minus;
+    else
+      return result;
+  }
+
+  //색과 선 크기를 계속해서 변경해주는 함수
+  function change(){
+    hue > 360 ? hue = 0 : hue++;
+
+    dir ? ctx.lineWidth++ : ctx.lineWidth--;
+    if (ctx.lineWidth < 10 || ctx.lineWidth > 100)
+      dir = !dir;
+  }
+  //선을 그리는 함수
+  //beginPath()로 path를 생성
+  //moveTo()로 시작점을 생성
+  //lineTO()로 선을 생성
+  //stroke()로 선을 출력
+  function draw(x, y){
+    ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+    ctx.beginPath();
+    ctx.moveTo(prevX, prevY);
+    ctx.lineTo(x, y);
+    ctx.stroke();
+    ctx.closePath();
+
+    change();
+    prevX = x;
+    prevY = y;
+  }
+
+  //마우스로 선을 그릴 수 있도록 해주는 함수
+  function mouseDraw(event){
+    if (!isDrawing) return;
+    draw(event.offsetX, event.offsetY);
+  }
+
+  //마우스로 점을 그릴 수 있도록 해주는 함수
+  function pointDraw(){
     ctx.beginPath();
     ctx.arc(event.offsetX, event.offsetY, ctx.lineWidth / 2, 0, Math.PI*2, false);
     ctx.fillStyle = `hsl(${hue}, 100%, 50%)`;
     ctx.fill();
     ctx.closePath();
-    hue > 360 ? hue = 0 : hue++;
-    dir ? ctx.lineWidth++ : ctx.lineWidth--;
-    if (ctx.lineWidth < 10 || ctx.lineWidth > 100)
-      dir = !dir;
-  });
-
-  function getRandom(cur){
-    let result = cur + Math.random() * 50 - Math.random() * 50;
-    return result > 800 || result < 0 ? Math.random() * 800 : result;
+    change();
   }
 
-  prevX = Math.random() * 800;
-  prevY = Math.random() * 800;
-
-  function randomDrawing(){
-    randomX = getRandom(prevX);
-    randomY = getRandom(prevY);
-    ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
-    ctx.beginPath();
-    ctx.moveTo(prevX, prevY);
-    ctx.lineTo(randomX, randomY);
-    ctx.stroke();
-    hue > 360 ? hue = 0 : hue++;
-    dir ? ctx.lineWidth++ : ctx.lineWidth--;
-    if (ctx.lineWidth < 10 || ctx.lineWidth > 100)
-      dir = !dir;
-    prevX = randomX;
-    prevY = randomY;
+  //랜덤으로 선을 생성해주는 함수
+  function randomDraw(){
+    draw(randomXY(prevX), randomXY(prevY));
   }
-
-  setInterval(randomDrawing, 10);
 </script>
