@@ -1,0 +1,83 @@
+<canvas id="draw" width="800" height="800"></canvas>
+
+<script>
+  const canvas = document.querySelector("#draw");
+  const ctx = canvas.getContext("2d");
+
+  let isDrawing = false;
+  let prevX = 0;
+  let prevY = 0;
+  let dir = true;
+
+  ctx.lineWidth = 10;
+  ctx.lineCap = "round";
+  ctx.linejoin = "round;"
+
+  function randomColor(){
+    return Math.floor(Math.random() * 361);
+  }
+
+  let hue = randomColor();
+
+  function draw(event){
+    if (!isDrawing) return;
+    ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+    ctx.beginPath();
+    ctx.moveTo(prevX, prevY);
+    ctx.lineTo(event.offsetX, event.offsetY);
+    ctx.stroke();
+    hue > 360 ? hue = 0 : hue++;
+    dir ? ctx.lineWidth++ : ctx.lineWidth--;
+    if (ctx.lineWidth < 10 || ctx.lineWidth > 100)
+      dir = !dir;
+    prevX = event.offsetX;
+    prevY = event.offsetY;
+  }
+
+  canvas.addEventListener("mouseup", () => isDrawing = false);
+  canvas.addEventListener("mouseout", () => isDrawing = false);
+  canvas.addEventListener("mousedown", (event) => {
+    isDrawing = true;
+    prevX = event.offsetX;
+    prevY = event.offsetY;
+  });
+  canvas.addEventListener("mousemove", draw);
+
+  canvas.addEventListener("click", (event) => {
+    ctx.beginPath();
+    ctx.arc(event.offsetX, event.offsetY, ctx.lineWidth / 2, 0, Math.PI*2, false);
+    ctx.fillStyle = `hsl(${hue}, 100%, 50%)`;
+    ctx.fill();
+    ctx.closePath();
+    hue > 360 ? hue = 0 : hue++;
+    dir ? ctx.lineWidth++ : ctx.lineWidth--;
+    if (ctx.lineWidth < 10 || ctx.lineWidth > 100)
+      dir = !dir;
+  });
+
+  function getRandom(cur){
+    let result = cur + Math.random() * 50 - Math.random() * 50;
+    return result > 800 || result < 0 ? Math.random() * 800 : result;
+  }
+
+  prevX = Math.random() * 800;
+  prevY = Math.random() * 800;
+
+  function randomDrawing(){
+    randomX = getRandom(prevX);
+    randomY = getRandom(prevY);
+    ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+    ctx.beginPath();
+    ctx.moveTo(prevX, prevY);
+    ctx.lineTo(randomX, randomY);
+    ctx.stroke();
+    hue > 360 ? hue = 0 : hue++;
+    dir ? ctx.lineWidth++ : ctx.lineWidth--;
+    if (ctx.lineWidth < 10 || ctx.lineWidth > 100)
+      dir = !dir;
+    prevX = randomX;
+    prevY = randomY;
+  }
+
+  setInterval(randomDrawing, 10);
+</script>
