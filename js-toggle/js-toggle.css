@@ -1,0 +1,12 @@
+h1 {
+  color: blue;
+}
+
+.clicked {
+  color: red;
+}
+
+.btn {
+  transition: color 0.5s ease-in-out;
+  cursor: pointer;
+}
