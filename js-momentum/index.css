@@ -11,6 +11,7 @@ body{
   display: block;
 }
 
+/* @keyframes와 animation 참조 */
 @keyframes fadeIn {
   from {
     opacity: 0;
