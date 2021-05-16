@@ -1,4 +1,5 @@
-import htmlStatement from './htmlStatement.js';
+// import htmlStatement from './htmlStatement.js';
+require htmlStatement = require("htmlStatement");
 
 const plays = {
   "hamlet": {"name": "Hamlet", "type": "tragedy"},

@@ -1,4 +1,5 @@
-import createStatementData from './createStatementData.js';
+// import createStatementData from './createStatementData.js';
+let createStatementData = require("createStatementData");
 
 export default function htmlStatement(invoice, plays){
   return renderHTML(createStatementData(invoice, plays));
