@@ -1,0 +1,20 @@
+<!-- https://nykim.work/12?category=692676 -->
+
+<canvas id="draw" width="800" height="800"></canvas>
+
+<script>
+  //querySelector를 통해 캔버스를 선택
+  const canvas = document.querySelector("#draw");
+  //getContext를 통해 캔버스를 실제로 사용할 수 있다.
+  const ctx = canvas.getContext("2d");
+
+  ctx.beginPath();
+  ctx.arc(50, 100, 50, 0, 2 * Math.PI);
+  ctx.stroke();
+  ctx.moveTo(50, 50);
+  ctx.quadraticCurveTo(95, 50, 100, 100);
+  ctx.quadraticCurveTo(95, 150, 50, 150);
+  ctx.quadraticCurveTo(5, 150, 0, 100);
+  ctx.quadraticCurveTo(5, 50, 50, 50);
+  ctx.stroke();
+</script>
