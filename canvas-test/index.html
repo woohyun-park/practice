@@ -1,90 +1,12 @@
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.1/TweenLite.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.1/TimelineMax.min.js"></script>
-<img id="main-img" height="750" src="http://farm6.staticflickr.com/5474/9765019294_91f9710e92_b_d.jpg"/>
-<div id="zoom">
-  <img id="zoom-img" />
-</div>
-<style>
-  body {
-  overflow: hidden;
-  margin: 0;
-  background: #222;
-}
-
-#main-img {
-  display: block;
-  margin: 20px auto;
-  border: 1px solid rgba(255,255,255,0.2);
-  filter: grayscale(0);
-}
-
-#zoom-img {
-  pointer-events: none;
-  position: relative;
-  top: 50%;
-  left: 50%;
-}
-
-#zoom {
-  position: absolute;
-  width: 250px;
-  height: 250px;
-  box-shadow: 0 0 0 2px rgba(255,0,0,0.5),
-    5px 5px 10px 5px rgba(0,0,0,0.2);
-  border-radius: 50%;
-  top: 0;
-  left: 0;
-  overflow: hidden;
-  pointer-events: none;
-  visibility: hidden;
-  opacity: 0;
-}
-
-</style>
-<script>
-  var zoom    = document.querySelector("#zoom");
-  var zoomImg = document.querySelector("#zoom-img");
-  var mainImg = document.querySelector("#main-img");
-  var enterTL = new TimelineMax({ paused: true });
-  var timer   = TweenLite.delayedCall(1, () => enterTL.reverse()).pause();
-
-  var cx, cy, ratio;
-
-  window.addEventListener("load", init);
-
-  function init() {
-
-    zoomImg.src = mainImg.src;
-    ratio = mainImg.naturalWidth / mainImg.width;
-    resize();
-
-    TweenLite.set([zoom, zoomImg], { xPercent: -50, yPercent: -50 });
-    TweenLite.set(zoom, { autoAlpha: 0, scale: 0 });
-
-    enterTL
-      .to(mainImg, 0.5, { filter: "grayscale(1)", "-webkit-filter": "grayscale(1)" }, 0)
-      .to(zoom, 0.5, { autoAlpha: 1, scale: 1 }, 0)
-
-    window.addEventListener("resize", resize);
-    mainImg.addEventListener("mouseleave", leaveAction);
-    mainImg.addEventListener("mousemove", moveAction);
-  }
-
-  function leaveAction() {
-    enterTL.reverse();
-  }
-
-  function moveAction(e) {
-    enterTL.play();
-    timer.restart(true);
-    TweenLite.set(zoom, { x: e.x, y: e.y });
-    TweenLite.to(zoomImg, { x: (cx - e.x) * ratio, y: (cy - e.y) * ratio });
-  }
-
-  function resize() {
-    var rect = mainImg.getBoundingClientRect();
-    cx = rect.left + rect.width  / 2;
-    cy = rect.top  + rect.height / 2;
-  }
-
-</script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script src="index.js"></script>
+</body>
+</html>
