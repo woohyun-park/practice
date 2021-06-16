@@ -24,3 +24,8 @@ console.log("this is six correct hellllo".match(regex6));
 //단어의 경계 + e, E, 공백이 아닌 문자가 1개이상 (탐욕x) + 단어의 경계
 const regex7 = /\b[^eE\s]+?\b/g;
 console.log("this contains CONTAINER container".match(regex7));
+
+//2. 인용구 스타일
+const regex8 = /\W'|'\W/g;
+// console.log(" 'This isn't real' ".match(regex8));
+console.log(" 'This isn't real' ".replace(regex8, "\""));
